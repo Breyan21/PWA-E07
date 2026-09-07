@@ -6,6 +6,12 @@ Comiencen por `START_HERE.md` y lean `ACTIVIDAD-01.md`. Este es un proyecto acum
 
 Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub. No se requiere Make. Registren aquí las versiones usadas (`node --version`, `npm --version`) y cualquier dificultad de entorno que encuentren.
 
+Entorno verificado :
+- Node.js:  v22.22.2
+- npm:** 10.9.7
+- Instrucciones verificadas: Instalación limpia con `npm ci` y servidor local levantado con `npm run dev`.
+- Incidencias de entorno: Ninguna incidencia detectada durante la configuración inicial.
+
 ## Ejecución
 
 ```bash
@@ -38,3 +44,7 @@ Inviten a los integrantes y al docente al mismo repositorio privado. Cada person
 - `tests/`: prueba inicial proporcionada; no es una suite completa de comportamiento.
 
 Registren aquí sus supuestos y limitaciones de ejecución. El starter todavía no implementa instalación PWA, offline ni sincronización. No incluyan datos personales reales en el producto, archivos `.env` ni credenciales. La identificación de integrantes se conserva en el repositorio privado y Classroom.
+
+
+
+
