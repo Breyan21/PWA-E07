@@ -4,12 +4,7 @@ Comiencen por `START_HERE.md` y lean `ACTIVIDAD-01.md`. Este es un proyecto acum
 
 ## Entorno
 
-Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub. No se requiere Make. 
-**Versiones usadas en este proyecto:**
-- Node: `v24.13.0`
-- NPM: `11.6.2`
-
-Dificultades de entorno encontradas: Ninguna que haya bloqueado el desarrollo, se resolvieron las vulnerabilidades de `npm i` usando `npm ci`.
+Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub. No se requiere Make. Registren aquí las versiones usadas (`node --version`, `npm --version`) y cualquier dificultad de entorno que encuentren.
 
 ## Ejecución
 
