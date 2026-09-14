@@ -33,3 +33,12 @@
 - Uso de IA: Utilicé herramientas de inteligencia artificial como apoyo para expandir mi redacción, organizar las ideas derivadas de los resultados de mi terminal y estructurar esta evidencia de manera más completa. 
 
 > No necesitan inventar un error ni escribir pruebas nuevas. «Ejecuté npm test» es insuficiente como explicación: indiquen qué observa la prueba y qué comportamiento queda fuera.
+
+## Integrante: José Miguel Jiménez Enríquez (Semana 2)
+
+- Mi contribución concreta y enlace: Me encargué de asegurar la calidad y reproducibilidad del proyecto para la Semana 2. Creé el archivo de pruebas `tests/manifest.spec.ts` para verificar el Web Manifest y actualicé la documentación en el `README.md`.
+- Decisión que puedo explicar y por qué: Decidí escribir la prueba de manifest utilizando el módulo nativo `node:assert/strict` de Node.js en lugar de instalar frameworks pesados como Jest o Playwright. Esto permite mantener las dependencias del proyecto al mínimo, asegurando que la prueba se ejecute muy rápido (y de forma compatible con Node 22+).
+- Comando o prueba proporcionada que ejecuté: `node --experimental-strip-types tests/manifest.spec.ts` y `bash public-tests/check.sh`
+- Resultado real que observé: El script de bash verificó correctamente la existencia estructural de los nuevos archivos y no arrojó secretos (PUBLIC_OK). Por su parte, la prueba nativa comprobó que el manifest existe, tiene todas sus llaves (`name`, `icons`, `display`, etc) y que los iconos físicos de hecho existen en la carpeta public. El resultado impreso fue `manifest.spec.ts: PASS`.
+- Limitación, dificultad o riesgo identificado: Un riesgo que identifiqué fue correr un archivo `.ts` nativamente sin una herramienta preconfigurada. La limitación actual es que la prueba requiere Node 22 (por `--experimental-strip-types`) o ser transpilada, lo cual documenté explícitamente en el README para que cualquiera pueda ejecutarla. Además, el manifest nos permite instalar, pero aún no somos una "verdadera" PWA offline porque no hay Service Worker.
+- Uso de IA: Utilicé Antigravity (IA) como pair programmer para ayudarme a entender la división de tareas, sincronizar el repositorio del equipo (copiando los workflows base) y agilizar la sintaxis de las pruebas en Node. Revisé y me cercioré de que los comandos propuestos fueran correctos y comprendo toda la lógica de validación del test generado.

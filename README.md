@@ -1,50 +1,56 @@
 # PWA de inspecciones de laboratorio — proyecto del equipo
 
-Comiencen por `START_HERE.md` y lean `ACTIVIDAD-01.md`. Este es un proyecto acumulativo: un repositorio privado por equipo durante el curso. La Semana 1 consiste en arrancar, documentar y explicar la verificación; no en implementar toda la PWA.
+Este es un proyecto acumulativo: un repositorio privado por equipo durante el curso. En la Semana 2 se implementa el Web Manifest y un App Shell para transformar la aplicación web básica en una PWA instalable con estados visuales.
 
 ## Entorno
 
-Node.js 20.19 o posterior compatible, npm 10 o posterior, Git y cuenta de GitHub. No se requiere Make. Registren aquí las versiones usadas (`node --version`, `npm --version`) y cualquier dificultad de entorno que encuentren.
-
-Entorno verificado :
-- Node.js:  v22.22.2
-- npm:** 10.9.7
+Entorno verificado:
+- **Node.js**: v22.22.2
+- **npm**: 10.9.7
 - Instrucciones verificadas: Instalación limpia con `npm ci` y servidor local levantado con `npm run dev`.
 - Incidencias de entorno: Ninguna incidencia detectada durante la configuración inicial.
 
-## Ejecución
+## Ejecución e Instalación
 
+Para ejecutar la aplicación localmente con el App Shell:
 ```bash
 npm ci
 npm run dev
 ```
 
-Abran `http://localhost:3000` y comprueben las tres inspecciones sintéticas. Detengan el servidor con Ctrl+C.
+Abran `http://localhost:3000` en su navegador. La aplicación cargará el App Shell con los datos de inspecciones de mantenimiento.
 
-## Verificación
+## Supuestos y Límites (Semana 2)
+
+- **Datos y Autenticación**: Los datos visualizados siguen siendo **sintéticos**. No se cuenta con backend real ni mecanismos de autenticación implementados.
+- **Instalabilidad**: La aplicación cuenta con un `manifest.webmanifest` válido que permite su **instalación** en navegadores compatibles.
+- **Offline y Sincronización**: **NO están implementados**. Aunque la app es instalable, perder la conexión a internet hará que falle, ya que aún no existe un *Service Worker* para cachear recursos ni un mecanismo de sincronización. Los estados de carga/error del App Shell actualmente son demostrativos para la UI.
+
+## Verificación y Pruebas
+
+Para validar los componentes estructurales y el Web Manifest:
 
 ```bash
-npm run verify
+# Verificar estructura y buscar secretos
+bash public-tests/check.sh
+
+# Ejecutar las pruebas del manifest y proyecto base
+node --experimental-strip-types tests/manifest.spec.ts
 ```
 
-Ejecuta comprobación de archivos, prueba proporcionada y build; genera `reports/verification.json`. El reporte contiene resultados técnicos y documentos para revisión, no una calificación automática. `make verify` es equivalente. `bash public-tests/check.sh` es un check opcional de estructura.
-
-GitHub Actions ejecuta la misma verificación y permite descargar el artefacto `starter-week-01-evidence`. El reporte local se excluye de Git: adjúntenlo en Classroom o descarguen el del SHA entregado desde Actions.
+> **Evidencia de ejecución**: 
+> - `bash public-tests/check.sh` arrojó `PUBLIC_OK`.
+> - `node tests/manifest.spec.ts` (transpilado o mediante Node 22) arrojó `manifest.spec.ts: PASS`.
 
 ## Trabajo y entrega en equipo
 
-Inviten a los integrantes y al docente al mismo repositorio privado. Cada persona registra su evidencia en una sección de `evidence/individual.md`. Todos entregan en Classroom el mismo SHA final y enlaces, identificando su sección. El formato exacto está en `ACTIVIDAD-01.md`; no se requiere un pull request adicional ni una copia por alumno.
+Cada integrante registra su evidencia en una sección de `evidence/individual.md`. Todos entregan en Classroom el mismo SHA final y enlaces, identificando su sección. 
 
-## Estructura y límites
+## Estructura
 
-- `src/app/`: pantalla Next.js.
-- `src/lib/data/`: inspecciones sintéticas.
-- `docs/`: requisitos y decisión del equipo.
-- `evidence/`: evidencia propia de cada integrante.
-- `tests/`: prueba inicial proporcionada; no es una suite completa de comportamiento.
-
-Registren aquí sus supuestos y limitaciones de ejecución. El starter todavía no implementa instalación PWA, offline ni sincronización. No incluyan datos personales reales en el producto, archivos `.env` ni credenciales. La identificación de integrantes se conserva en el repositorio privado y Classroom.
-
-
-
-
+- `public/manifest.webmanifest`: Metadatos de la PWA.
+- `src/components/app-shell.tsx`: Cascarón visual y navegación.
+- `src/app/`: Rutas Next.js y el contenido inyectado en el shell.
+- `src/lib/data/`: Inspecciones sintéticas.
+- `evidence/`: Evidencia propia de cada integrante.
+- `tests/`: Pruebas de validación (ej. manifest).
