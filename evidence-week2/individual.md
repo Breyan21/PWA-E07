@@ -9,7 +9,7 @@
 - Uso declarado de IA (herramienta, propósito, validación):
 
 - Estudiante: Eduardo Lezama Zárate
-- Commit SHA evaluado: 
+- Commit SHA evaluado: 3db61ec1f1e3245839e26ad0589be94cd6611cd6
 - Decisión técnica que puedo explicar: Hice el componente AppShell para que la página esté bien estructurada. Para mostrar los estados (carga, error, etc.), nos permite simular cómo se verá la app en las diferentes tipo de caraga de datos sin tener que conectarnos a una base de datos real.
 - Prueba que ejecuté y resultado: usé la tecla Tab para navegar por la página sin el ratón. Comprobé que el menú y los botones de demostración se seleccionan bien y que al presionarlos el contenido cambia sin romper el diseño que ya teníamos.
 - Limitación o fallo diagnosticado: el botón de Error de conexión es solo una simulación visual. Como todavía no configuramos la parte que trabaja sin internet la aplicación no puede detectar por sí sola si el dispositivo se queda sin wifi.
