@@ -5,6 +5,16 @@
 - Grupo y equipo: A E07
 - Repositorio del equipo: https://github.com/Breyan21/PWA-E07.git
 
+## Integrante: José Miguel Jiménez Enríquez
+
+- **Mi contribución concreta y enlace a archivo, commit anterior o revisión:** Me encargué de definir el producto futuro y sus límites. Para ello, completé el archivo `docs/requirements.md` desarrollando el problema, dos escenarios principales (uno con conectividad intermitente), requisitos funcionales (RF) con condiciones de aceptación, requisitos no funcionales (RNF) medibles y los datos sintéticos. Enlace a mi commit: https://github.com/Breyan21/PWA-E07/commit/661be91
+- **Decisión que puedo explicar y por qué:** Elegí documentar específicamente el escenario de "Conectividad intermitente" porque es el verdadero problema a resolver en los laboratorios de la UTT. El personal de mantenimiento frecuentemente pierde la señal de internet dentro de los laboratorios, por lo que era crucial establecer el requisito funcional (RF-02) donde el usuario guarda el hallazgo localmente y la aplicación le notifica. Es importante aclarar que estos escenarios offline y de sincronización son requisitos futuros y **no están implementados** en el starter actual de la Semana 1.
+- **Comando o prueba proporcionada que ejecuté:** Ejecuté `npm run verify` para validar el entorno y generar el reporte final después de agregar mi documentación.
+- **Resultado real que observé:** El comando terminó exitosamente (código 0) y el reporte `reports/verification.json` confirmó la existencia de mi archivo `requirements.md`.
+- **Qué verifica esa prueba y qué no verifica:** La prueba verifica automáticamente que el archivo de requisitos existe en la estructura y que el proyecto compila. Sin embargo, **no verifica** la calidad académica de mi análisis, la coherencia de mis escenarios propuestos, ni garantiza que los requisitos futuros definidos realmente funcionen en código.
+- **Limitación, dificultad o riesgo que identifiqué:** Un riesgo que identifiqué al redactar los requisitos fue no diferenciar claramente lo que se entrega hoy de lo que se entregará después. Tuve cuidado en aclarar en el documento qué acciones (como listar) corresponden a la Semana 1 y qué acciones (como el guardado offline) son metas a futuro, para evitar prometer cosas que aún no están programadas.
+- **Uso de IA:** Se utilizó Antigravity (IA) como apoyo para estructurar el formato de los escenarios y requisitos funcionales de acuerdo a la plantilla y rúbrica. Revisé detalladamente el texto generado para asegurar que el contexto de los laboratorios de la UTT fuera realista y que cumpliera con las instrucciones de la actividad.
+
 ## Integrante: Breyan Sebastián Matías Lira
 
 - Mi contribución concreta y enlace: Elaboré `docs/decision-record.md`,
@@ -42,3 +52,21 @@
 - Resultado real que observé: El script de bash verificó correctamente la existencia estructural de los nuevos archivos y no arrojó secretos (PUBLIC_OK). Por su parte, la prueba nativa comprobó que el manifest existe, tiene todas sus llaves (`name`, `icons`, `display`, etc) y que los iconos físicos de hecho existen en la carpeta public. El resultado impreso fue `manifest.spec.ts: PASS`.
 - Limitación, dificultad o riesgo identificado: Un riesgo que identifiqué fue correr un archivo `.ts` nativamente sin una herramienta preconfigurada. La limitación actual es que la prueba requiere Node 22 (por `--experimental-strip-types`) o ser transpilada, lo cual documenté explícitamente en el README para que cualquiera pueda ejecutarla. Además, el manifest nos permite instalar, pero aún no somos una "verdadera" PWA offline porque no hay Service Worker.
 - Uso de IA: Utilicé Antigravity (IA) como pair programmer para ayudarme a entender la división de tareas, sincronizar el repositorio del equipo (copiando los workflows base) y agilizar la sintaxis de las pruebas en Node. Revisé y me cercioré de que los comandos propuestos fueran correctos y comprendo toda la lógica de validación del test generado.
+
+## Integrante: Eduardo Lezama Zárate (Semana 2)
+
+- Mi contribución concreta y enlace: Hice el componente AppShell para que la página esté bien estructurada y manejé los estados visuales.
+- Decisión que puedo explicar y por qué: Para mostrar los estados (carga, error, etc.), implementé una estructura que nos permite simular cómo se verá la app en las diferentes fases de carga de datos sin tener que conectarnos a una base de datos real.
+- Comando o prueba proporcionada que ejecuté: Usé la tecla Tab para navegar por la página sin el ratón.
+- Resultado real que observé: Comprobé que el menú y los enlaces se seleccionan bien y que al interactuar con ellos el contenido es accesible por teclado sin romper el diseño.
+- Limitación, dificultad o riesgo identificado: El botón de Error de conexión o los estados visuales son solo una simulación visual. Como todavía no configuramos la parte que trabaja sin internet, la aplicación no puede detectar por sí sola si el dispositivo se queda sin wifi. Además, puedo cambiar rápido los textos, los colores de las alertas de error, o hacer que las tarjetas de las inspecciones se acomoden diferente en la pantalla modificando el archivo page.tsx.
+- Uso de IA: Usé inteligencia artificial para ayudarme a juntar los componentes de React con el código CSS que ya existía, revisando que el diseño original de la página no se desacomodara.
+
+## Integrante: Breyan Sebastián Matías Lira (Semana 2)
+
+- Mi contribución concreta y enlace: Configuré la estructura global de la PWA. Añadí el archivo `public/manifest.webmanifest` definiendo las propiedades de instalación y los iconos. También integré estos metadatos en `src/app/layout.tsx`.
+- Decisión que puedo explicar y por qué: Decidí establecer el `display` como `standalone` para garantizar que la aplicación se sienta nativa al ser instalada.
+- Comando o prueba proporcionada que ejecuté: Ejecución local (`npm run dev`) y revisión de DevTools.
+- Resultado real que observé: Revisé las DevTools (Application > Manifest) y comprobé que el navegador reconoce correctamente el archivo, detecta los iconos generados y declara que la aplicación es instalable sin errores.
+- Limitación, dificultad o riesgo identificado: El manifest está listo y permite la instalación en dispositivos, pero si perdemos conexión, la aplicación no funcionará offline hasta que configuremos un Service Worker en las próximas semanas.
+- Uso de IA: Utilicé asistentes de IA para validar que el formato JSON del webmanifest cumpliera con el estándar de PWA y para configurar correctamente las rutas de los iconos sin romper el layout en Next.js.
