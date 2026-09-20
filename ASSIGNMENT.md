@@ -1,4 +1,4 @@
-# Actividad 2: App shell instalable y manifest
+    # Actividad 3: Service worker y consulta offline
 
 ## Scenario
 
@@ -6,50 +6,50 @@ La Universidad Tecnológica de Tehuacán necesita una PWA para registrar inspecc
 
 ## Objective
 
-Diseñar un shell instalable con manifest válido, estados de carga/error y límites de componentes verificables.
+Implementar una estrategia de caché explícita con ciclo de vida seguro, recuperación ante fallos y evidencia de consistencia offline.
 
 ## Competencies
 
-**Primaria:** C03. **Acumulativas:** C10, C12.
+**Primaria:** C03. **Acumulativas:** C05, C06.
 
 ## Engineering uplift traceability
 
-**Mínimo oficial:** Unidad II: componentes y configuración; resultado de generar app shell y configurar PWA.
+**Mínimo oficial:** Unidad II: service worker, funcionamiento offline, configuración e instalación/actualización.
 
-**Elevación Engineering Target:** Diseñar un shell instalable con manifest válido, estados de carga/error y límites de componentes verificables.
+**Elevación Engineering Target:** Implementar una estrategia de caché explícita con ciclo de vida seguro, recuperación ante fallos y evidencia de consistencia offline.
 
-**Evidencia de la elevación:** Implementa nombre, iconos, display, scope, start_url, navegación principal y estados de carga, error y vacío. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
+**Evidencia de la elevación:** Registra el service worker, define precache/runtime cache, fallback offline y una estrategia de actualización sin servir una versión corrupta. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
 
 ## Prerequisites
 
-Continuar el repositorio personal creado en la Semana 1. No descargues un starter nuevo: conserva la implementación anterior y agrega solo la capacidad de esta semana.
+Continuar el repositorio personal creado en las semanas anteriores. No descargues un starter nuevo: conserva el shell y el manifest, y agrega solo la capacidad de esta semana.
 
 ## Schedule and one-week submission window
 
-Semana 2 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
+Semana 3 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
 
 ## Difficulty
 
-Nivel 6/10. La dificultad proviene de integrar restricciones, justificar trade-offs y demostrar fallos y recuperación, manteniendo un alcance entregable en una semana.
+Nivel 7/10. La dificultad proviene de integrar restricciones, justificar trade-offs y demostrar fallos y recuperación, manteniendo un alcance entregable en una semana.
 
 ## Requirements
 
-1. Continuar el mismo repositorio de inspecciones creado con `PWA-starter.zip` e implementar el shell de la PWA.
+1. Continuar el mismo repositorio de inspecciones e implementar la consulta offline indicada.
 2. Entregar los archivos indicados y datos exclusivamente sintéticos.
 3. Explicar decisiones, límites, riesgos y evidencia de prueba.
 4. Ejecutar los comandos de verificación localmente antes de enviar.
 
-**Funcionalidad mínima:** Implementa nombre, iconos, display, scope, start_url, navegación principal y estados de carga, error y vacío.
+**Funcionalidad mínima:** Registra el service worker, define precache/runtime cache, fallback offline y una estrategia de actualización sin servir una versión corrupta.
 
-**No funcionales:** La interfaz debe ser accesible por teclado, usar landmarks, tener contraste razonable y funcionar en viewport móvil y escritorio.
+**No funcionales:** No debe cachear indiscriminadamente datos sensibles ni bloquear la carga; debe registrar errores y permitir invalidación controlada.
 
 ## Deliverables
 
-- `public/manifest.webmanifest`
-- `src/app/layout.tsx`
-- `src/app/page.tsx`
-- `src/components/app-shell.tsx`
-- `tests/manifest.spec.ts`
+- `public/sw.js`
+- `src/lib/pwa/register-service-worker.ts`
+- `docs/cache-strategy.md`
+- `tests/service-worker.spec.ts`
+- `tests/offline.spec.ts`
 - `README.md` con ejecución, supuestos y evidencia.
 - Reporte de verificación generado por CI o localmente.
 
@@ -107,7 +107,7 @@ Objetivo de automatización: 90% o más. El workflow instala, compila, ejecuta p
 
 ## Hidden tests
 
-`private-evaluator/w02-shell-manifest/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
+`private-evaluator/w03-service-worker-offline/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
 
 ## Manual review
 

@@ -70,3 +70,16 @@
 - Resultado real que observé: Revisé las DevTools (Application > Manifest) y comprobé que el navegador reconoce correctamente el archivo, detecta los iconos generados y declara que la aplicación es instalable sin errores.
 - Limitación, dificultad o riesgo identificado: El manifest está listo y permite la instalación en dispositivos, pero si perdemos conexión, la aplicación no funcionará offline hasta que configuremos un Service Worker en las próximas semanas.
 - Uso de IA: Utilicé asistentes de IA para validar que el formato JSON del webmanifest cumpliera con el estándar de PWA y para configurar correctamente las rutas de los iconos sin romper el layout en Next.js.
+
+
+
+
+## Integrante: Eduardo Lezama Zárate (Semana 3)
+
+- Mi contribución concreta y enlace: Creación del Service Worker (sw.js) para manejar el guardado local y diseño de la pantalla sin conexión (offline.html). 
+Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
+- Decisión que puedo explicar y por qué: Decidí que solo se guarden cosas públicas como logos y la vista básica y nada de datos privados para que no nos roben información. También hice que la app no se actualice de golpe, para no cerrarle o reiniciarle la pantalla en la cara a la persona que la esté usando.
+- Comando o prueba proporcionada que ejecuté: Desde las herramientas de desarrollo del navegador (DevTools), fui a la pestaña Network y cambié la conexión a Offline. Sin internet, navegué por la página y luego intenté entrar a un enlace inventado.
+- Resultado real que observé:La página principal siguió cargando perfectamente desde la memoria del navegador. Al entrar al enlace equivocado, el sistema detectó la falla y me mostró correctamente mi pantalla de "Sin conexión a Internet".
+- Limitación, dificultad o riesgo identificado: El problema es que el espacio que usamos para guardar la página no tiene un límite. Si se usa mucho, le podemos llenar la memoria del teléfono al usuario sin darnos cuenta.
+- **Uso de IA: Utilicé para entender cómo interceptar la falta de internet. Validé todo manualmente apagando la red de mi navegador para comprobar que funcionara correctamente.
