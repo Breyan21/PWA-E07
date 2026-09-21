@@ -83,3 +83,18 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 - Resultado real que observé:La página principal siguió cargando perfectamente desde la memoria del navegador. Al entrar al enlace equivocado, el sistema detectó la falla y me mostró correctamente mi pantalla de "Sin conexión a Internet".
 - Limitación, dificultad o riesgo identificado: El problema es que el espacio que usamos para guardar la página no tiene un límite. Si se usa mucho, le podemos llenar la memoria del teléfono al usuario sin darnos cuenta.
 - **Uso de IA: Utilicé para entender cómo interceptar la falta de internet. Validé todo manualmente apagando la red de mi navegador para comprobar que funcionara correctamente.
+
+## Integrante: Breyan Sebastián Matías Lira (Semana 3)
+
+- Mi contribución concreta y enlace: Implementé la lógica de registro, ciclo de vida y actualización segura del Service Worker (`src/lib/pwa/register-service-worker.ts`), el componente cliente con interfaz de actualización explícita (`src/components/service-worker-registration.tsx`) y su integración no bloqueante en el layout raíz (`src/app/layout.tsx`). Enlace / Commit SHA: `c78d6e7a250dfbf0aba206148d6cd922863d81dc`.
+- Decisión que puedo explicar y por qué: Decidí que cuando haya una versión nueva, la app no se actualice ni se recargue sola. En su lugar, le mostramos un aviso con un botón para actualizar cuando el usuario quiera, evitando interrumpirlo o que pierda los datos de la inspección que esté llenando en ese momento. También aseguré que si el registro del Service Worker llega a fallar o el navegador no lo soporta, la aplicación no se rompa y se pueda seguir usando normalmente en línea.
+- Comando o prueba proporcionada que ejecuté:
+  1. `npm run build`: Para validar la compilación limpia de Next.js, tipos de TypeScript y empaquetado del componente en producción.
+  2. `npm run verify`: Para ejecutar la suite de verificación técnica de la estructura del proyecto.
+  3. Pruebas de ciclo de vida en Node.js: Validando el retorno seguro en SSR (`null`), detección de worker en espera (`waiting`), y el envío de mensajes `{ type: 'CLEAR_RUNTIME_CACHE' }` y `{ type: 'SKIP_WAITING' }`.
+- Resultado real que observé:
+  1. `npm run build` completó con éxito (código de salida 0), compilando la ruta `/` en 10.6 kB sin advertencias de tipos.
+  2. `npm run verify` finalizó con status `"pass"` en la verificación técnica.
+  3. La prueba de ciclo de vida confirmó que al ejecutar `applyUpdate`, el worker en espera recibe la orden de invalidar caché y tomar el control (`skipWaiting`), y el evento `controllerchange` dispara la recarga limpia.
+- Limitación, dificultad o riesgo identificado: Si la persona usuaria pospone indefinidamente la actualización mediante "Más tarde", continuará ejecutando una versión en caché que podría quedar desfasada frente a cambios en la API del backend o en esquemas de datos futuros. Además, si el usuario tiene múltiples pestañas abiertas simultáneamente, se debe contemplar la coordinación entre clientes para que todas las pestañas adopten el nuevo worker de forma sincronizada.
+- Uso de IA y validación humana: Utilicé Antigravity (IA) como asistente de pair programming para diseñar la arquitectura del ciclo de vida del Service Worker según las especificaciones del W3C y armar la interfaz accesible del componente con los estilos del proyecto. Validación humana: Revisé minuciosamente el código para asegurar que no existieran recargas automáticas destructivas, verifiqué los mensajes de consola requeridos, ejecuté la compilación y pruebas locales, y validé que la solución responde exactamente a los criterios de evaluación de la Semana 3.
