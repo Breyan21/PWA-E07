@@ -1,4 +1,4 @@
-    # Actividad 3: Service worker y consulta offline
+# Actividad 4: Renderizado CSR/SSR con estados verificables
 
 ## Scenario
 
@@ -6,27 +6,27 @@ La Universidad Tecnológica de Tehuacán necesita una PWA para registrar inspecc
 
 ## Objective
 
-Implementar una estrategia de caché explícita con ciclo de vida seguro, recuperación ante fallos y evidencia de consistencia offline.
+Implementar y comparar rutas CSR y SSR para el mismo dominio, midiendo impacto en carga, accesibilidad y complejidad.
 
 ## Competencies
 
-**Primaria:** C03. **Acumulativas:** C05, C06.
+**Primaria:** C04. **Acumulativas:** C03, C10.
 
 ## Engineering uplift traceability
 
-**Mínimo oficial:** Unidad II: service worker, funcionamiento offline, configuración e instalación/actualización.
+**Mínimo oficial:** Unidad II: renderizado del lado del cliente y del servidor; pantallas home, splash y carga.
 
-**Elevación Engineering Target:** Implementar una estrategia de caché explícita con ciclo de vida seguro, recuperación ante fallos y evidencia de consistencia offline.
+**Elevación Engineering Target:** Implementar y comparar rutas CSR y SSR para el mismo dominio, midiendo impacto en carga, accesibilidad y complejidad.
 
-**Evidencia de la elevación:** Registra el service worker, define precache/runtime cache, fallback offline y una estrategia de actualización sin servir una versión corrupta. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
+**Evidencia de la elevación:** Entrega una ruta con datos renderizados en servidor y otra con interacción cliente; ambas tienen loading, error y contenido verificable. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
 
 ## Prerequisites
 
-Continuar el repositorio personal creado en las semanas anteriores. No descargues un starter nuevo: conserva el shell y el manifest, y agrega solo la capacidad de esta semana.
+Continuar el repositorio personal creado en las semanas anteriores. No descargues un starter nuevo: conserva la PWA y agrega las rutas solicitadas.
 
 ## Schedule and one-week submission window
 
-Semana 3 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
+Semana 4 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
 
 ## Difficulty
 
@@ -34,22 +34,22 @@ Nivel 7/10. La dificultad proviene de integrar restricciones, justificar trade-o
 
 ## Requirements
 
-1. Continuar el mismo repositorio de inspecciones e implementar la consulta offline indicada.
+1. Continuar el mismo repositorio de inspecciones e implementar el listado y detalle solicitados.
 2. Entregar los archivos indicados y datos exclusivamente sintéticos.
 3. Explicar decisiones, límites, riesgos y evidencia de prueba.
 4. Ejecutar los comandos de verificación localmente antes de enviar.
 
-**Funcionalidad mínima:** Registra el service worker, define precache/runtime cache, fallback offline y una estrategia de actualización sin servir una versión corrupta.
+**Funcionalidad mínima:** Entrega una ruta con datos renderizados en servidor y otra con interacción cliente; ambas tienen loading, error y contenido verificable.
 
-**No funcionales:** No debe cachear indiscriminadamente datos sensibles ni bloquear la carga; debe registrar errores y permitir invalidación controlada.
+**No funcionales:** Evita hydration mismatch, documenta límites de datos y mide al menos una métrica de carga repetible.
 
 ## Deliverables
 
-- `public/sw.js`
-- `src/lib/pwa/register-service-worker.ts`
-- `docs/cache-strategy.md`
-- `tests/service-worker.spec.ts`
-- `tests/offline.spec.ts`
+- `src/app/inspecciones/page.tsx`
+- `src/app/inspecciones/[id]/page.tsx`
+- `src/components/loading-state.tsx`
+- `docs/rendering-decision.md`
+- `tests/rendering.spec.ts`
 - `README.md` con ejecución, supuestos y evidencia.
 - Reporte de verificación generado por CI o localmente.
 
@@ -107,7 +107,7 @@ Objetivo de automatización: 90% o más. El workflow instala, compila, ejecuta p
 
 ## Hidden tests
 
-`private-evaluator/w03-service-worker-offline/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
+`private-evaluator/w04-csr-ssr/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
 
 ## Manual review
 

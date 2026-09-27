@@ -44,3 +44,9 @@ export const inspections: Inspection[] = [
   }
 ];
 
+
+// Simula una consulta en servidor con latencia para ejercitar el estado de carga.
+export async function getInspectionById(id: string): Promise<Inspection | null> {
+  await new Promise((resolve) => setTimeout(resolve, 800));
+  return inspections.find((inspection) => inspection.id === id) ?? null;
+}
