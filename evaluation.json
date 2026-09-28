@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "assignmentId": "w03-service-worker-offline",
+  "assignmentId": "w04-csr-ssr",
   "schedule": {
-    "week": 3,
+    "week": 4,
     "partial": 1,
     "maxDurationDays": 7
   },
@@ -15,16 +15,16 @@
     "justification": "Integra el mínimo oficial con restricciones de ingeniería, evidencia ejecutable, trade-offs y recuperación dentro de una semana."
   },
   "traceability": {
-    "officialOutcome": "Unidad II: service worker, funcionamiento offline, configuración e instalación/actualización.",
-    "institutionalMinimum": "Unidad II: service worker, funcionamiento offline, configuración e instalación/actualización.",
-    "engineeringTarget": "Implementar una estrategia de caché explícita con ciclo de vida seguro, recuperación ante fallos y evidencia de consistencia offline.",
+    "officialOutcome": "Unidad II: renderizado del lado del cliente y del servidor; pantallas home, splash y carga.",
+    "institutionalMinimum": "Unidad II: renderizado del lado del cliente y del servidor; pantallas home, splash y carga.",
+    "engineeringTarget": "Implementar y comparar rutas CSR y SSR para el mismo dominio, midiendo impacto en carga, accesibilidad y complejidad.",
     "upliftBasis": "La actividad agrega criterios de calidad, automatización, seguridad, observabilidad y evidencia individual sin alterar el alcance oficial."
   },
   "competencies": {
-    "primary": "C03",
+    "primary": "C04",
     "cumulative": [
-      "C05",
-      "C06"
+      "C03",
+      "C10"
     ]
   },
   "reproducibility": {
@@ -35,7 +35,7 @@
     "required": true,
     "platform": "github_actions",
     "mode": "hybrid",
-    "workflowPath": ".github/workflows/week-03-w03-service-worker-offline.yml",
+    "workflowPath": ".github/workflows/week-04-w04-csr-ssr.yml",
     "setupCommands": [
       "npm ci --ignore-scripts --no-audit --no-fund"
     ],
@@ -73,7 +73,7 @@
       "type": "automatic",
       "points": 3,
       "evidence": "Los artefactos declarados para la actividad existen.",
-      "command": "test -e 'public/sw.js' && test -e 'src/lib/pwa/register-service-worker.ts' && test -e 'docs/cache-strategy.md' && test -e 'tests/service-worker.spec.ts' && test -e 'tests/offline.spec.ts'"
+      "command": "test -e 'src/app/inspecciones/page.tsx' && test -e 'src/app/inspecciones/[id]/page.tsx' && test -e 'src/components/loading-state.tsx' && test -e 'docs/rendering-decision.md' && test -e 'tests/rendering.spec.ts'"
     },
     {
       "id": "AC-03",

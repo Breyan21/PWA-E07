@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { inspections } from "../lib/data/inspections";
+import Link from "next/link";
 import AppShell from "../components/app-shell";
+import LoadingState from "../components/loading-state";
 
 type AppState = 'loading' | 'error' | 'empty' | 'data';
 
@@ -30,12 +32,7 @@ export default function HomePage() {
         </header>
 
         <section aria-labelledby="inspections-heading" className="content-section">
-          {currentState === 'loading' && (
-            <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <h3 style={{ color: 'var(--accent)' }}>Cargando inspecciones...</h3>
-              <p className="muted">Por favor espera un momento.</p>
-            </div>
-          )}
+          {currentState === 'loading' && <LoadingState message="Cargando inspecciones..." />}
 
           {currentState === 'error' && (
             <div style={{ background: 'var(--warning-soft)', border: '1px solid var(--warning)', borderRadius: '16px', padding: '30px', textAlign: 'center' }}>
@@ -71,7 +68,7 @@ export default function HomePage() {
                       <span className={`badge badge-${inspection.status}`}>{inspection.statusLabel}</span>
                       <span className="muted">{inspection.date}</span>
                     </div>
-                    <h3>{inspection.location}</h3>
+                    <h3><Link href={`/inspecciones/${inspection.id}`}>{inspection.location}</Link></h3>
                     <p>{inspection.summary}</p>
                     <dl>
                       <div>
