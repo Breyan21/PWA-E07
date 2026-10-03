@@ -149,7 +149,7 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 
 ## Integrante 1: Eduardo Lezama Zárate (Semana 5)
 
-- **Mi contribución concreta y enlace:** Implementé la capa de persistencia local y el esquema de datos en `src/lib/storage/schema.ts`, definiendo las interfaces (`InspectionRecord`, `SyncOperation`) y las utilidades para gestionar el estado de las operaciones offline[cite: 18]. Enlace / SHA: [PEGA_TU_SHA_AQUI]
+- **Mi contribución concreta y enlace:** Implementé la capa de persistencia local y el esquema de datos en `src/lib/storage/schema.ts`, definiendo las interfaces (`InspectionRecord`, `SyncOperation`) y las utilidades para gestionar el estado de las operaciones offline[cite: 18]. Enlace / SHA: d3410f5e459888e8da311d0394f1ab0532d47181
 - **Decisión que puedo explicar y por qué:** Incluí metadatos obligatorios como el `mutationId` único y `timestamp` en el esquema de la operación. Esta decisión es fundamental para soportar la idempotencia, ya que permite a la capa de orquestación identificar si una mutación ya fue procesada y evitar la duplicación de registros en caso de reintentos.
 - **Comando o prueba ejecutada:** Ejecuté `npm run build` para comprobar el tipado estricto de TypeScript sin dependencias no declaradas y probé la generación local de los objetos `SyncOperation`.
 - **Resultado real que observé:** El código compila limpiamente sin advertencias de tipos en Node. Las funciones auxiliares construyen los objetos con los metadatos correctos y el estado inicial `pending`.
