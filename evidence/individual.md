@@ -183,7 +183,7 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 - Uso de IA: Utilicé Antigravity (IA) como asistente de pair programming para diseñar la estructura de la clase `SyncQueue` con TypeScript estricto, la fórmula matemática del retroceso exponencial con tope superior y la lógica de descarte por idempotencia. Validación humana: Revisé minuciosamente el código, verifiqué que no existieran fugas de memoria en el procesamiento asíncrono, ajusté los valores por defecto (`maxRetries: 3`, `baseDelayMs: 200`), y ejecuté las pruebas de build y suite localmente.
 
 
-## Integrante: Eduardo Lezama Zárate (Semana 5)
+## Integrante: Eduardo Lezama Zárate (Semana 6)
 
 - Estudiante: Eduardo Lezama Zarate
 - Commit SHA evaluado: da2fe290bc557a32a0f811456325686074a72c61
@@ -191,5 +191,22 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 - Prueba que ejecuté y resultado: Escribí una prueba unitaria determinista usando `node:assert/strict` y la integré en el script de pruebas de `package.json`. En la prueba, reemplacé `getUserMedia` con un mock que rechaza la promesa con un `NotAllowedError`. El resultado verificó exitosamente que el código atrapa el error, establece `success` en `false`, `stream` en `null` y activa correctamente la bandera `fallbackTriggered: true` sin interrumpir la ejecución.
 - Limitación o fallo diagnosticado: La API `mediaDevices` exige estrictamente un contexto seguro (HTTPS) para operar. En entornos HTTP que no sean localhost, el navegador bloquea el acceso al hardware silenciosamente, forzando a la aplicación a depender siempre del mecanismo de fallback (como un input de archivo tradicional).
 - Cambio que podría defender o modificar en vivo: Podría demostrar cómo invertir la cámara predeterminada (de la trasera a la frontal) modificando la propiedad `facingMode` de `'environment'` a `'user'` dentro de los constraints de video en la solicitud inicial.
-- Uso declarado de IA: utilice gemini para validar la sintaxis segura en TypeScript del bloque try-catch y para ayudarme a hacer el mock del objeto `navigator` en la suite de pruebas sin depender de librerías externas. Revisé y ejecuté manualmente el código para confirmar que cumpliera con las aserciones de `node:assert`.
+- Uso declarado de IA: utilize gemini para validar la sintaxis segura en TypeScript del bloque try-catch y para ayudarme a hacer el mock del objeto `navigator` en la suite de pruebas sin depender de librerías externas. Revisé y ejecuté manualmente el código para confirmar que cumpliera con las aserciones de `node:assert`.
+
+## Integrante: Breyan Sebastián Matías Lira (Semana 6)
+
+- Mi contribución concreta y enlace: Desarrollé el módulo de geolocalización en `src/lib/device/geolocation.ts` con lectura puntual bajo demanda, minimización de datos y degradación elegante hacia coordenadas sintéticas, además de extender la suite de pruebas unitarias en `tests/capabilities.spec.ts`. Enlace / Commit SHA: `94b43b14ca0a88d9055d8d5e3dad662c43072d58` (commit corto: `94b43b1`).
+- Decisión que puedo explicar y por qué: Apliqué el principio de permisos mínimos y privacidad solicitando la ubicación mediante una llamada puntual `getCurrentPosition` en lugar de una suscripción continua `watchPosition`, protegiendo la privacidad del inspector y minimizando el consumo de batería en campo. Además, configuré parámetros balanceados (`enableHighAccuracy: false`, `timeout: 5000`, `maximumAge: 60000`) y diseñé un fallback funcional sintético (`SYNTHETIC_FALLBACK_COORDINATES`) que garantiza que cuando la API no esté disponible o el usuario deniegue el permiso (`PERMISSION_DENIED`), la PWA no bloquee el registro de la inspección y marque transparentemente `fallbackTriggered: true` y `isSyntheticFallback: true`.
+- Comando o prueba ejecutada:
+  1. `npm run build`: Para comprobar la integración de tipos con TypeScript y la compilación limpia del proyecto en Next.js.
+  2. `npm test`: Para validar la suite completa de pruebas (`starter`, `rendering`, `sync` y `capabilities`).
+  3. Pruebas unitarias de geolocalización en `tests/capabilities.spec.ts`:
+     - Verificación de fallback funcional ante rechazo de permiso (`error.code === 1` - `PERMISSION_DENIED`) retornando coordenadas sintéticas por defecto.
+     - Obtención exitosa de coordenadas reales simuladas (`latitude`, `longitude`, `accuracy`) con `fallbackTriggered: false`.
+     - Manejo seguro ante entornos sin soporte de geolocalización (SSR o navegadores antiguos) sin lanzar excepciones no controladas.
+- Resultado real que observé: El comando `npm run build` completó con éxito (código de salida 0) sin advertencias de tipos. La suite `npm test` finalizó con status PASS en todos los casos: `✓ Geolocalización: fallback ante PERMISSION_DENIED`, `✓ Geolocalización: obtención exitosa de coordenadas` y `✓ Geolocalización: fallback ante entorno no soportado`.
+- Qué verifica esa prueba y qué no verifica: La prueba verifica determinísticamente que ante la denegación de permisos o ausencia de la API, el sistema captura el código de error, activa la bandera `fallbackTriggered`, asigna las coordenadas sintéticas de respaldo y mantiene la estabilidad de la aplicación. No verifica la precisión física del GPS en condiciones climáticas adversas o dentro de edificios con blindaje estructural donde la señal de satélite es nula.
+- Limitación, dificultad o riesgo identificado: La API de geolocalización requiere un contexto seguro (HTTPS o localhost) y depende de los permisos del sistema operativo además de los del navegador. En dispositivos móviles dentro de sótanos o laboratorios cerrados, la obtención de coordenadas puede agotar el timeout de 5000ms antes de fijar satélites, por lo que el diseño del fallback a coordenadas sintéticas o manuales es indispensable para la continuidad operativa.
+- Uso de IA: Utilicé Antigravity (IA) como asistente de pair programming para diseñar los tipos de retorno estructurado (`GeolocationResult`), estructurar el mock del objeto `navigator.geolocation` con `PositionCallback` y `PositionErrorCallback` en `capabilities.spec.ts` usando `node:assert/strict`, y redactar la justificación técnica de privacidad y minimización de datos. Validación humana: Revisé minuciosamente el código, verifiqué que no existieran dependencias externas no declaradas y ejecuté la suite completa de pruebas y el build localmente.
+
 
