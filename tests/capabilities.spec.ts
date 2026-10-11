@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import { requestCameraAccess } from "../src/lib/device/camera";
+import {
+  requestCurrentPosition,
+  SYNTHETIC_FALLBACK_COORDINATES
+} from "../src/lib/device/geolocation";
 
 // Envoltura mínima estilo expect sobre node:assert (el proyecto no usa Jest/Vitest)
 function expect<T>(actual: T) {
@@ -58,13 +62,108 @@ async function testCameraFallbackOnPermissionDenied() {
   }
 }
 
+async function testGeolocationFallbackOnPermissionDenied() {
+  let calls = 0;
+  const restore = mockNavigator({
+    geolocation: {
+      getCurrentPosition: (
+        _success: PositionCallback,
+        error: PositionErrorCallback
+      ) => {
+        calls++;
+        error({
+          code: 1, // PERMISSION_DENIED
+          message: "User denied Geolocation",
+          PERMISSION_DENIED: 1,
+          POSITION_UNAVAILABLE: 2,
+          TIMEOUT: 3
+        } as GeolocationPositionError);
+      }
+    }
+  });
+
+  try {
+    const result = await requestCurrentPosition();
+
+    expect(calls).toBe(1, "getCurrentPosition debe invocarse una vez");
+    expect(result.success).toBe(false, "success debe ser false cuando se niega el permiso");
+    expect(result.fallbackTriggered).toBe(true, "fallbackTriggered debe ser true");
+    expect(result.isSyntheticFallback).toBe(true, "isSyntheticFallback debe ser true");
+    expect(result.error).toBe("Permiso de geolocalización denegado por el usuario.");
+    expect(result.coords?.latitude).toBe(SYNTHETIC_FALLBACK_COORDINATES.latitude);
+    expect(result.coords?.longitude).toBe(SYNTHETIC_FALLBACK_COORDINATES.longitude);
+  } finally {
+    restore();
+  }
+}
+
+async function testGeolocationSuccess() {
+  let calls = 0;
+  const restore = mockNavigator({
+    geolocation: {
+      getCurrentPosition: (
+        success: PositionCallback
+      ) => {
+        calls++;
+        success({
+          coords: {
+            latitude: 18.5,
+            longitude: -97.4,
+            accuracy: 25,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null
+          },
+          timestamp: Date.now()
+        } as GeolocationPosition);
+      }
+    }
+  });
+
+  try {
+    const result = await requestCurrentPosition();
+
+    expect(calls).toBe(1, "getCurrentPosition debe invocarse una vez");
+    expect(result.success).toBe(true, "success debe ser true");
+    expect(result.fallbackTriggered).toBe(false, "fallbackTriggered debe ser false");
+    expect(result.isSyntheticFallback).toBe(false, "isSyntheticFallback debe ser false");
+    expect(result.coords?.latitude).toBe(18.5);
+    expect(result.coords?.longitude).toBe(-97.4);
+  } finally {
+    restore();
+  }
+}
+
+async function testGeolocationUnsupported() {
+  const restore = mockNavigator({});
+
+  try {
+    const result = await requestCurrentPosition();
+
+    expect(result.success).toBe(false, "success debe ser false cuando no hay soporte");
+    expect(result.fallbackTriggered).toBe(true, "fallbackTriggered debe ser true");
+    expect(result.isSyntheticFallback).toBe(true, "isSyntheticFallback debe ser true");
+    expect(result.coords?.latitude).toBe(SYNTHETIC_FALLBACK_COORDINATES.latitude);
+  } finally {
+    restore();
+  }
+}
+
 async function runTest() {
-  console.log("Iniciando tests de capacidades (cámara)...");
+  console.log("Iniciando tests de capacidades (cámara y geolocalización)...");
   await testCameraFallbackOnPermissionDenied();
   console.log("✓ Cámara: fallback ante NotAllowedError");
+  await testGeolocationFallbackOnPermissionDenied();
+  console.log("✓ Geolocalización: fallback ante PERMISSION_DENIED");
+  await testGeolocationSuccess();
+  console.log("✓ Geolocalización: obtención exitosa de coordenadas");
+  await testGeolocationUnsupported();
+  console.log("✓ Geolocalización: fallback ante entorno no soportado");
 }
 
 runTest().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
