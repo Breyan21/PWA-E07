@@ -232,7 +232,7 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 
 - Nombre: Eduardo Lezama Zárate
 - Grupo y equipo: 10 A - Equipo E07
-- Enlace / Commit SHA:  
+- Enlace / Commit SHA: 7658dd375edb84788ddee5c57f563e092d3ccfce
 - Mi contribución de esta semana y enlace: Configuración de Vitest, pruebas unitarias de validación e idempotencia, y prueba de integración de persistencia offline. Enlace / SHA: [PEGA_TU_SHA_AQUI]
 - Decisión técnica y motivo: Elegí configurar Vitest acotando la ejecución a las carpetas `tests/unit/` y `tests/integration/`, excluyendo explícitamente `tests/e2e/`. El motivo es garantizar una ejecución rápida en Node utilizando `jsdom` para las pruebas de integración, dejando que Playwright maneje las interacciones reales del navegador. Habilité la cobertura V8 para generar los reportes requeridos por el pipeline.
 - Prueba/comando que ejecuté: `npx vitest run tests/unit tests/integration --coverage`
