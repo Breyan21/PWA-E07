@@ -228,3 +228,15 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 
 
 
+## Semana 8
+
+- Nombre: Eduardo Lezama Zárate
+- Grupo y equipo: 10 A - Equipo E07
+- Enlace / Commit SHA:  
+- Mi contribución de esta semana y enlace: Configuración de Vitest, pruebas unitarias de validación e idempotencia, y prueba de integración de persistencia offline. Enlace / SHA: [PEGA_TU_SHA_AQUI]
+- Decisión técnica y motivo: Elegí configurar Vitest acotando la ejecución a las carpetas `tests/unit/` y `tests/integration/`, excluyendo explícitamente `tests/e2e/`. El motivo es garantizar una ejecución rápida en Node utilizando `jsdom` para las pruebas de integración, dejando que Playwright maneje las interacciones reales del navegador. Habilité la cobertura V8 para generar los reportes requeridos por el pipeline.
+- Prueba/comando que ejecuté: `npx vitest run tests/unit tests/integration --coverage`
+- Resultado observado y enlace al reporte: Las 4 pruebas pasaron exitosamente en 1.10s y se generó el reporte de cobertura V8 en terminal.
+- Qué demuestra y qué no demuestra: Demuestra que la estructura de pruebas, las aserciones lógicas y la configuración de Vitest funcionan localmente de manera determinista. No demuestra la cobertura del código fuente real de la aplicación, ya que se utilizaron mocks en línea para aislar la validación de la infraestructura.
+- Limitación o riesgo: La advertencia de configuración ESM de Vite en consola indica que en futuras actualizaciones mayores será necesario ajustar la extensión a `.mts` o configurar `type: module` en el `package.json` para evitar problemas de compatibilidad.
+- IA: Consulté a Gemini para verificar la sintaxis en vitest.config.ts y como referencia para estructurar los mocks de almacenamiento. La lógica de los casos de prueba, la adaptación al dominio del proyecto y la validación de las aserciones fueron desarrolladas y ejecutadas 100% de forma manual.
