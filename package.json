@@ -13,7 +13,7 @@
     "test:e2e": "playwright test",
     "test:coverage": "vitest run --coverage",
     "test:legacy": "node tests/starter.spec.mjs && npx --yes tsx tests/rendering.spec.ts && npx --yes tsx tests/sync.spec.ts && npx --yes tsx tests/capabilities.spec.ts",
-    "test": "vitest run tests/unit tests/integration && playwright test",
+    "test": "node scripts/test.mjs",
     "verify": "node scripts/verify.mjs",
     "verify:all": "npm run lint && npm run typecheck && npm run build && npm run test:coverage && npm run test:legacy && npm run test:e2e && npm run verify"
   },

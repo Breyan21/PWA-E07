@@ -28,7 +28,7 @@ npm run build && npm run start   # producción
 | Integración | `npm run test:integration` | Vitest sobre `tests/integration/` (persistencia offline + no duplicación con remoto simulado). |
 | Cobertura | `npm run test:coverage` | Unit + integración con V8; genera `coverage/` (no se versiona). |
 | E2E | `npm run test:e2e` | Playwright en Chromium: offline → recarga → reconexión sin duplicados; fallback con permisos denegados. |
-| Todo | `npm test` | Unit + integración, luego E2E. |
+| Todo | `npm test` | Unit + integración, luego E2E (`scripts/test.mjs`; equivale a `vitest run tests/unit tests/integration && playwright test`). Con `--run` (usado por los workflows formativos de las semanas 2-6) solo ejecuta `test:legacy`. |
 | Históricas (sem. 1–6) | `npm run test:legacy` | `tests/*.spec.ts` (starter, rendering, sync, capabilities). |
 
 **Servidor E2E:** `playwright.config.ts` arranca la app con `npm run build && npm run start -- --hostname 127.0.0.1 --port 3000`. La primera vez instale el navegador: `npx playwright install --with-deps chromium`. En Windows local usa Chrome instalado (`channel: 'chrome'`); en CI usa Chromium de Playwright.
