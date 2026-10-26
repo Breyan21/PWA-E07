@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import AppShell from '../../components/app-shell';
 import LoadingState from '../../components/loading-state';
+import OfflineInspectionWorkflow from '../../components/offline-inspection-workflow';
 import { inspections, type Inspection, type InspectionStatus } from '../../lib/data/inspections';
 
 type FilterStatus = 'all' | InspectionStatus;
@@ -178,6 +179,8 @@ export default function InspeccionesPage() {
             </div>
           </div>
         </section>
+
+        <OfflineInspectionWorkflow />
 
         {/* Región de contenido con estados verificables */}
         <section aria-labelledby="results-heading" aria-live="polite">

@@ -228,3 +228,27 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 
 
 
+## Semana 8
+
+- Nombre: Eduardo Lezama Zárate
+- Grupo y equipo: 10 A - Equipo E07
+- Enlace / Commit SHA: 7658dd375edb84788ddee5c57f563e092d3ccfce
+- Mi contribución de esta semana y enlace: Configuración de Vitest, pruebas unitarias de validación e idempotencia, y prueba de integración de persistencia offline. Enlace / SHA: [PEGA_TU_SHA_AQUI]
+- Decisión técnica y motivo: Elegí configurar Vitest acotando la ejecución a las carpetas `tests/unit/` y `tests/integration/`, excluyendo explícitamente `tests/e2e/`. El motivo es garantizar una ejecución rápida en Node utilizando `jsdom` para las pruebas de integración, dejando que Playwright maneje las interacciones reales del navegador. Habilité la cobertura V8 para generar los reportes requeridos por el pipeline.
+- Prueba/comando que ejecuté: `npx vitest run tests/unit tests/integration --coverage`
+- Resultado observado y enlace al reporte: Las 4 pruebas pasaron exitosamente en 1.10s y se generó el reporte de cobertura V8 en terminal.
+- Qué demuestra y qué no demuestra: Demuestra que la estructura de pruebas, las aserciones lógicas y la configuración de Vitest funcionan localmente de manera determinista. No demuestra la cobertura del código fuente real de la aplicación, ya que se utilizaron mocks en línea para aislar la validación de la infraestructura.
+- Limitación o riesgo: La advertencia de configuración ESM de Vite en consola indica que en futuras actualizaciones mayores será necesario ajustar la extensión a `.mts` o configurar `type: module` en el `package.json` para evitar problemas de compatibilidad.
+- IA: Consulté a Gemini para verificar la sintaxis en vitest.config.ts y como referencia para estructurar los mocks de almacenamiento. La lógica de los casos de prueba, la adaptación al dominio del proyecto y la validación de las aserciones fueron desarrolladas y ejecutadas 100% de forma manual.
+
+
+## Nombre: Breyan Sebastián Matías Lira
+
+- Grupo y equipo: 10 A - Equipo E07
+- Mi contribución de esta semana y enlace: Implementación de pruebas E2E con Playwright, generación del build de producción con Next.js y documentación de evidencia. Commit d0e060c
+- Decisión técnica y motivo: Se decidió usar Playwright para pruebas end‑to‑end porque permite automatizar flujos de inspección offline y manejo de permisos de cámara/geolocalización; Next.js se utilizó para generar un build estático optimizado, garantizando que la aplicación funcione en modo producción.
+- Prueba/comando que ejecuté: npm run test:e2e y npm run build
+- Resultado observado y enlace al reporte: Ambas pruebas E2E pasaron (2 tests exitosos) y el build de Next.js finalizó sin errores.
+- Qué demuestra y qué no demuestra: Demuestra que la aplicación sigue funciona correctamente tras los cambios, que los flujos offline y de reconexión se comportan como se espera y que el bundle de producción se genera exitosamente. No demuestra rendimiento bajo carga ni cobertura completa de todas las rutas de la app.
+- Limitación o riesgo: npm ci mostró advertencias de EBADENGINE por dependencias que requieren versiones de Node superiores a la instalada; además, se detectaron 2 vulnerabilidades (1 alta, 1 crítica) que podrían requerir actualizaciones de paquetes en el futuro.
+- IA: herramienta, propósito, partes influidas y validación propia; o «no utilicé IA»: Utilicé la IA Antigravity (AGY) para automatizar la ejecución de comandos. La IA asistió en la organización del flujo de trabajo, pero la validación final del código y resultados la realicé manualmente revisando los logs y resultados de los tests.
