@@ -1,0 +1,66 @@
+name: academic-evaluation
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # vitest 5 exige Node >=22.12 y jsdom 30 exige >=24.15 -> se usa Node 24.
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 1. Instalación limpia (npm ci)
+        run: npm ci
+
+      - name: 2a. Lint (npm run lint)
+        run: npm run lint
+
+      - name: 2b. Comprobación de tipos (npx tsc --noEmit)
+        run: npx tsc --noEmit
+
+      - name: 3. Build de producción (npm run build)
+        run: npm run build
+
+      - name: 4. Pruebas unitarias + integración con cobertura (npm run test:coverage)
+        run: npm run test:coverage
+
+      - name: 5. Instalar Chromium de Playwright
+        run: npx playwright install --with-deps chromium
+
+      # El servidor para E2E lo arranca playwright.config.ts (webServer):
+      # npm run build && npm run start -- --hostname 127.0.0.1 --port 3000
+      - name: 6. Pruebas E2E (npm run test:e2e)
+        run: npm run test:e2e
+
+      - name: Publicar cobertura (coverage/)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: warn
+
+      - name: Publicar resultados E2E (test-results/ y playwright-report/)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: warn

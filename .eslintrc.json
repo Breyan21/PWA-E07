@@ -1,0 +1,4 @@
+{
+  "extends": "next/core-web-vitals",
+  "ignorePatterns": ["coverage/", "test-results/", "playwright-report/", ".next/", "node_modules/", "public-tests/", "PWA-w04-kit-estudiante/"]
+}

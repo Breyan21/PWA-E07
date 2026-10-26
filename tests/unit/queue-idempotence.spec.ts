@@ -1,55 +1,72 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-// IMPORTA TU CLASE REAL AQUÍ:
-// import { SyncQueue } from '@/lib/sync/queue';
+import { SyncQueue } from '@/lib/sync/queue';
+import { createSyncOperation, type InspectionRecord } from '@/lib/storage/schema';
 
-class SyncQueue {
-  private items = new Map();
-  private retryCounts = new Map();
-
-  enqueue(item: any) {
-    if (this.items.has(item.mutationId)) return false;
-    this.items.set(item.mutationId, item);
-    this.retryCounts.set(item.mutationId, 0);
-    return true;
-  }
-  
-  getPending() { return Array.from(this.items.values()); }
-  
-  // Fórmula de retroceso exponencial (base 2)
-  getBackoffTime(mutationId: string) {
-    const retries = this.retryCounts.get(mutationId) || 0;
-    return Math.pow(2, retries) * 1000;
-  }
-
-  incrementRetry(mutationId: string) {
-    const current = this.retryCounts.get(mutationId) || 0;
-    this.retryCounts.set(mutationId, current + 1);
-  }
-}
+const fixture = (id: string): InspectionRecord => ({
+  id,
+  title: `Inspección sintética ${id}`,
+  status: 'ok',
+  date: '2026-10-25',
+  inspectorId: 'user-test',
+  version: 1,
+  updatedAt: 1000
+});
 
 describe('SyncQueue - Idempotencia, FIFO y Backoff', () => {
   let queue: SyncQueue;
-  beforeEach(() => { queue = new SyncQueue(); });
+  beforeEach(() => {
+    queue = new SyncQueue({ maxRetries: 3, baseDelayMs: 200, maxDelayMs: 2000 });
+  });
 
-  it('debe descartar mutaciones duplicadas (Idempotencia)', () => {
-    const op = { mutationId: 'mut-123', data: 'test' };
+  it('debe descartar mutaciones duplicadas (idempotencia)', () => {
+    const op = createSyncOperation('CREATE', fixture('1'));
     expect(queue.enqueue(op)).toBe(true);
-    expect(queue.enqueue(op)).toBe(false); // Falla el duplicado
+    expect(queue.enqueue(op)).toBe(false);
+    expect(queue.getPending()).toHaveLength(1);
   });
 
-  it('debe mantener el orden secuencial (FIFO)', () => {
-    queue.enqueue({ mutationId: '1', data: 'A' });
-    queue.enqueue({ mutationId: '2', data: 'B' });
-    const pending = queue.getPending();
-    expect(pending[0].mutationId).toBe('1');
-    expect(pending[1].mutationId).toBe('2');
+  it('debe descartar una mutación ya sincronizada', async () => {
+    const op = createSyncOperation('CREATE', fixture('1'));
+    queue.enqueue(op);
+    await queue.processQueue(async () => true);
+    expect(queue.isProcessed(op.mutationId)).toBe(true);
+    expect(queue.enqueue(op)).toBe(false);
   });
 
-  it('debe aplicar la fórmula de retroceso exponencial ante reintentos', () => {
-    queue.enqueue({ mutationId: 'mut-fail', data: 'test' });
-    expect(queue.getBackoffTime('mut-fail')).toBe(1000); // 2^0 * 1000
-    
-    queue.incrementRetry('mut-fail');
-    expect(queue.getBackoffTime('mut-fail')).toBe(2000); // 2^1 * 1000
+  it('debe rechazar operaciones sin mutationId', () => {
+    const invalid = { ...createSyncOperation('CREATE', fixture('1')), mutationId: '' };
+    expect(() => queue.enqueue(invalid)).toThrow(/mutationId/);
+  });
+
+  it('debe despachar en orden secuencial (FIFO)', async () => {
+    const a = createSyncOperation('CREATE', fixture('A'));
+    const b = createSyncOperation('CREATE', fixture('B'));
+    queue.enqueue(a);
+    queue.enqueue(b);
+    expect(queue.getPending().map((o) => o.mutationId)).toEqual([a.mutationId, b.mutationId]);
+
+    const order: string[] = [];
+    await queue.processQueue(async (op) => {
+      order.push(op.payload.id);
+    });
+    expect(order).toEqual(['A', 'B']);
+  });
+
+  it('debe aplicar retroceso exponencial acotado', () => {
+    expect(queue.calculateBackoff(0)).toBe(0);
+    expect(queue.calculateBackoff(1)).toBe(200);
+    expect(queue.calculateBackoff(2)).toBe(400);
+    expect(queue.calculateBackoff(3)).toBe(800);
+    expect(queue.calculateBackoff(10)).toBe(2000);
+  });
+
+  it('debe marcar como fallida una operación que agota los reintentos', async () => {
+    const q = new SyncQueue({ maxRetries: 2, baseDelayMs: 0, maxDelayMs: 0 });
+    const op = createSyncOperation('CREATE', fixture('F'));
+    q.enqueue(op);
+    await q.processQueue(async () => { throw new Error('red caída'); });
+    const result = await q.processQueue(async () => { throw new Error('red caída'); });
+    expect(result.failed).toBe(1);
+    expect(q.getFailed()).toHaveLength(1);
   });
 });
