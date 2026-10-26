@@ -6,9 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx,.js,.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test",
-    "test": "node tests/starter.spec.mjs && npx --yes tsx tests/rendering.spec.ts && npx --yes tsx tests/sync.spec.ts && npx --yes tsx tests/capabilities.spec.ts",
-    "verify": "node scripts/verify.mjs"
+    "test:coverage": "vitest run --coverage",
+    "test:legacy": "node tests/starter.spec.mjs && npx --yes tsx tests/rendering.spec.ts && npx --yes tsx tests/sync.spec.ts && npx --yes tsx tests/capabilities.spec.ts",
+    "test": "vitest run tests/unit tests/integration && playwright test",
+    "verify": "node scripts/verify.mjs",
+    "verify:all": "npm run lint && npm run typecheck && npm run build && npm run test:coverage && npm run test:legacy && npm run test:e2e && npm run verify"
   },
   "dependencies": {
     "next": "14.2.35",
@@ -21,6 +28,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
     "jsdom": "^30.1.3",
     "typescript": "^5.4.5",
     "vitest": "^5.0.5"
