@@ -17,10 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      # vitest 5 exige Node >=22.12 y jsdom 30 exige >=24.15 -> se usa Node 24.
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: 1. Instalación limpia (npm ci)

@@ -1,60 +1,70 @@
-# PWA de Inspecciones de Laboratorio - Actividad Semana 6
+# PWA de Inspecciones de Laboratorio (PWA-E07)
 
-Aplicación Web Progresiva (PWA) para el registro y auditoría de inspecciones de mantenimiento en los laboratorios de la Universidad Tecnológica de Tehuacán (UTT).
+Aplicación Web Progresiva (Next.js 14) para el registro de inspecciones de mantenimiento en laboratorios de la UTT, con captura offline, cola de sincronización idempotente y fallbacks de dispositivo (cámara, geolocalización, notificaciones). Datos 100 % sintéticos.
 
-Este incremento (Semana 6: `w06-device-push`) integra capacidades nativas del hardware y del sistema operativo (Cámara, Geolocalización y Notificaciones) bajo los principios de **permisos mínimos (*least privilege*)**, **acción explícita del usuario**, **privacidad y minimización de datos** y **fallbacks funcionales obligatorios**.
+## Requisitos
 
----
+- **Node.js 24** (≥ 24.15). `vitest@5` exige Node ≥ 22.12 y `jsdom@30` ≥ 24.15. Es la versión usada en CI.
+- npm 10+.
 
-## Entregables de la Semana 6
+## Instalación limpia
 
-1. **Cámara (`src/lib/device/camera.ts`):** Detección de soporte, solicitud bajo demanda de captura interactiva y liberación de recursos de hardware (`MediaStreamTrack.stop()`) con fallback controlado ante permisos denegados.
-2. **Geolocalización (`src/lib/device/geolocation.ts`):** Consulta puntual de coordenadas (*one-shot*) con timeout acotado (5000ms), sin rastreo invasivo continuo, y fallback a coordenadas sintéticas de la UTT ante denegación o falta de cobertura.
-3. **Notificaciones (`src/lib/notifications/client.ts`):** Verificación contextual de permisos, envío de avisos y mecanismo de fallback in-app (alertas visuales en pantalla) si el usuario rechaza el permiso o el entorno no soporta la API.
-4. **Memoria Técnica (`docs/capabilities.md`):** Matriz de permisos, justificación de solicitud, medidas de privacidad y arquitectura de fallbacks.
-5. **Suite de Pruebas Automatizadas (`tests/capabilities.spec.ts`):** Pruebas unitarias deterministas que validan detección de APIs, flujos exitosos y activación de fallbacks ante errores y permisos denegados.
-6. **Evidencia Individual (`evidence/individual.md`):** Registro de aportaciones, decisiones técnicas, pruebas y justificaciones por integrante.
-
----
-
-## Comandos de Ejecución y Verificación
-
-### 1. Instalación limpia de dependencias
 ```bash
 npm ci
 ```
 
-### 2. Ejecución de la suite completa de pruebas
-```bash
-npm test
-```
-Ejecuta de forma secuencial y determinista:
-- `tests/starter.spec.mjs`: Validación base del starter.
-- `tests/rendering.spec.ts`: Validación de directivas de renderizado (CSR vs SSR).
-- `tests/sync.spec.ts`: Pruebas de cola de sincronización e idempotencia.
-- `tests/capabilities.spec.ts`: Pruebas de capacidades de hardware (cámara, geolocalización) y notificaciones con fallbacks.
+## Arranque
 
-### 3. Compilación de producción
 ```bash
-npm run build
-```
-Valida la integridad de tipos en TypeScript y genera el bundle optimizado de Next.js.
-
-### 4. Verificación técnica de estructura y reporte
-```bash
-npm run verify
-```
-Genera el reporte formal en `reports/verification.json`.
-
-### 5. Verificación de checks públicos
-```bash
-bash public-tests/check.sh
+npm run dev        # desarrollo en http://localhost:3000
+npm run build && npm run start   # producción
 ```
 
----
+## Pruebas por capa
 
-## Supuestos de Diseño y Decisiones Técnicas
+| Capa | Comando | Qué ejecuta |
+| --- | --- | --- |
+| Unitarias | `npm run test:unit` | Vitest sobre `tests/unit/` (validación de captura, cola/idempotencia). |
+| Integración | `npm run test:integration` | Vitest sobre `tests/integration/` (persistencia offline + no duplicación con remoto simulado). |
+| Cobertura | `npm run test:coverage` | Unit + integración con V8; genera `coverage/` (no se versiona). |
+| E2E | `npm run test:e2e` | Playwright en Chromium: offline → recarga → reconexión sin duplicados; fallback con permisos denegados. |
+| Todo | `npm test` | Unit + integración, luego E2E (`scripts/test.mjs`; equivale a `vitest run tests/unit tests/integration && playwright test`). Con `--run` (usado por los workflows formativos de las semanas 2-6) solo ejecuta `test:legacy`. |
+| Históricas (sem. 1–6) | `npm run test:legacy` | `tests/*.spec.ts` (starter, rendering, sync, capabilities). |
 
-- **Consentimiento Just-In-Time:** Ninguna API nativa se dispara durante la carga inicial de la aplicación. Toda solicitud responde estrictamente a un gesto intencional del usuario.
-- **Resiliencia Total:** La denegación de permisos nunca rompe el flujo de registro de una inspección. La aplicación continúa funcionando mediante datos sintéticos o avisos in-app.
-- **Minimización de Datos:** No se realizan lecturas en segundo plano ni monitoreo continuo de ubicación (`watchPosition` no implementado por diseño).
+**Servidor E2E:** `playwright.config.ts` arranca la app con `npm run build && npm run start -- --hostname 127.0.0.1 --port 3000`. La primera vez instale el navegador: `npx playwright install --with-deps chromium`. En Windows local usa Chrome instalado (`channel: 'chrome'`); en CI usa Chromium de Playwright.
+
+## Calidad estática y build
+
+```bash
+npm run lint          # ESLint (next/core-web-vitals)
+npx tsc --noEmit      # comprobación de tipos
+npm run build         # build de producción de Next.js
+```
+
+## Verificación global
+
+```bash
+make verify
+```
+
+Ejecuta `npm run verify:all`: `lint` → `tsc --noEmit` → `build` → `test:coverage` → `test:legacy` → `test:e2e` → `npm run verify` (reporte técnico `reports/verification.json`). Termina con código distinto de 0 si cualquier etapa falla. Sin `make`: `npm run verify:all`.
+
+## Integración continua
+
+Workflow: `.github/workflows/academic-evaluation.yml`. Etapas: `npm ci`, `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm run test:coverage`, `npx playwright install --with-deps chromium`, `npm run test:e2e`. Publica los artefactos `coverage/` y `test-results/` (+ `playwright-report/`) con `if: always()`.
+
+## Documentación
+
+- Estrategia de pruebas, matriz riesgo–capa y defecto controlado: [`docs/test-strategy.md`](docs/test-strategy.md)
+- Evidencia individual: [`evidence/individual.md`](evidence/individual.md)
+- Capacidades de dispositivo: [`docs/capabilities.md`](docs/capabilities.md)
+
+## Reproducir el defecto controlado
+
+Ver sección 5 de [`docs/test-strategy.md`](docs/test-strategy.md): en una rama temporal, comentar las protecciones de `mutationId` en `SyncQueue.enqueue` (`src/lib/sync/queue.ts`) y ejecutar `npx vitest run tests/unit tests/integration` (falla); al revertir, pasa.
+
+## Decisiones de diseño (semana 6, vigentes)
+
+- **Consentimiento just-in-time:** ninguna API nativa se dispara al cargar; todo requiere un gesto del usuario.
+- **Resiliencia:** la denegación de permisos no rompe el registro de una inspección (datos sintéticos / avisos in-app).
+- **Minimización de datos:** sin rastreo continuo (`watchPosition` no implementado).
