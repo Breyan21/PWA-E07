@@ -95,10 +95,10 @@ AssertionError: expected true to be false // Object.is equality
 
 | Estado | Commit | Ejecución de Actions |
 | --- | --- | --- |
-| Fallo (defecto) | `cd6d181` (rama local `test/defecto-controlado-duplicados`) | `PENDIENTE: se completa tras autorizar el push` |
-| Recuperación | `c98d0e4` (misma rama) / rama de entrega | `PENDIENTE: se completa tras autorizar el push` |
+| Fallo (defecto) | `cd6d181`; rama `test/defecto-controlado-duplicados` en el SHA `ff8ec18` (estado actual + defecto reaplicado) | [Run en ROJO](https://github.com/Breyan21/PWA-E07/actions/runs/40266586281): falla el paso `npm run test:coverage` |
+| Recuperación | `c98d0e4` (revert local); rama de entrega en el SHA `b830e9d` (mismo `src/` sin defecto) | [Run en VERDE](https://github.com/Breyan21/PWA-E07/actions/runs/40266046397): las 7 etapas y los artefactos pasan |
 
-> Nota: la ejecución en Actions del fallo requiere subir la rama temporal; solo se hará con autorización explícita. Mientras tanto, la evidencia es la salida real local anterior.
+> Nota: `test/defecto-controlado-duplicados` es solo evidencia del experimento y **no se integra** a `main` ni a la rama de entrega. En el run en rojo, `npm ci`, lint, `tsc` y build pasan y falla únicamente `test:coverage`, es decir, la prueba detecta el defecto. Los runs de verde y rojo comparten el mismo código excepto `src/lib/sync/queue.ts`.
 
 ## 6. Límites
 
