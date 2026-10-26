@@ -72,14 +72,15 @@ export class SyncQueue {
     }
 
     // 1. Verificación de idempotencia: descarte si ya fue sincronizada previamente
-    // DEFECTO CONTROLADO: validacion de duplicados por mutationId deshabilitada
-    // if (this.processedMutationIds.has(operation.mutationId)) {
-    //   return false;
-    // }
+    if (this.processedMutationIds.has(operation.mutationId)) {
+      return false;
+    }
 
     // 2. Verificación de idempotencia en cola: descarte si ya está encolada
     const alreadyQueued = this.queue.some(item => item.mutationId === operation.mutationId);
-    // if (alreadyQueued) { return false; }
+    if (alreadyQueued) {
+      return false;
+    }
 
     // 3. Encolar con metadatos de reintento inicializados
     const queuedItem: QueuedOperation = {
