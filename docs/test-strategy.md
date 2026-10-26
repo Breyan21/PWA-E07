@@ -7,7 +7,7 @@ Stack: Vitest 5 (unitarias, integración, cobertura V8) + Playwright (E2E en Chr
 
 | Hallazgo | Impacto | Acción |
 | --- | --- | --- |
-| `npm ci` funciona (con 2 vulnerabilidades reportadas por `npm audit`: 1 alta, 1 crítica; no se aplicó `--force`). | AC-01 OK | Documentado. |
+| `npm ci` funciona (con 5 vulnerabilidades reportadas por `npm audit` tras agregar ESLint 8: 4 altas, 1 crítica; ya había 2 (1 alta, 1 crítica) antes; no se aplicó `--force`). | AC-01 OK | Documentado. |
 | `package.json` no tenía `test:unit`, `test:integration`, `test:coverage`; `npm test` no ejecutaba Vitest. | No se podía ejecutar la capa Vitest por script | Scripts unificados. |
 | No existía ESLint ni `npm run lint`. | El CI no podía ejecutar lint | Se agregó `eslint@8` + `eslint-config-next` y `.eslintrc.json`. |
 | `tests/unit/*` y `tests/integration/*` probaban **copias simuladas** de `SyncQueue` y `validateInspection` definidas dentro del propio test. | Un defecto en `src/lib/sync/queue.ts` **no habría sido detectado** | Las pruebas ahora importan `@/lib/sync/queue`, `@/lib/storage/schema` y el nuevo `@/lib/domain/validation`. |
