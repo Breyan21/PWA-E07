@@ -273,7 +273,7 @@ El SHA final común se entrega en Classroom tras el último commit. No inserten 
 
 - Nombre: Eduardo Lezama Zárate
 - Grupo y equipo: 10 A - Equipo E07
-- Enlace / Commit SHA:
+- Enlace / Commit SHA: 9d7cac0ff27f89c1097aaf59f907a56046772c46
 - Mi contribución de esta semana y enlace: Elaboré `docs/threat-model.md` y `docs/privacy-data-inventory.md` con base en el código existente y configuré `public/robots.txt` para excluir la ruta operativa `/inspecciones`.
 - Decisión técnica y motivo: Documenté únicamente los flujos verificados: registros sintéticos precargados, captura local en `localStorage`, Service Worker para navegación y recursos, y ausencia de envío de inspecciones a un servidor. Esto evita atribuir al prototipo funciones que no están implementadas.
 - Prueba/comando que ejecuté: Comprobé la existencia y legibilidad de los tres entregables y busqué el patrón anti-fugas en esos archivos.
