@@ -267,3 +267,17 @@ Enlace / Commit SHA: 1cc32b04464fd750a48c4b6969ea384d1e287b66
 - IA: Utilicé Antigravity (asistente de IA de Google DeepMind) para auditar el repositorio, redactar `docs/test-strategy.md`, el workflow, el README, los scripts, el módulo `validation.ts` y la reescritura de las pruebas de Eduardo para usar el código real. Partes influidas: todos los archivos listados en la contribución. Validación propia: ejecuté localmente todos los comandos (lint, tipos, build, unit, integración, cobertura, E2E), revisé la salida roja y verde del defecto controlado y revisé los diffs antes de cada commit.
 
 El SHA final común se entrega en Classroom tras el último commit. No inserten ese SHA en un nuevo commit para intentar identificar el mismo archivo.
+
+
+## Semana 9
+
+- Nombre: Eduardo Lezama Zárate
+- Grupo y equipo: 10 A - Equipo E07
+- Enlace / Commit SHA:
+- Mi contribución de esta semana y enlace: Elaboré `docs/threat-model.md` y `docs/privacy-data-inventory.md` con base en el código existente y configuré `public/robots.txt` para excluir la ruta operativa `/inspecciones`.
+- Decisión técnica y motivo: Documenté únicamente los flujos verificados: registros sintéticos precargados, captura local en `localStorage`, Service Worker para navegación y recursos, y ausencia de envío de inspecciones a un servidor. Esto evita atribuir al prototipo funciones que no están implementadas.
+- Prueba/comando que ejecuté: Comprobé la existencia y legibilidad de los tres entregables y busqué el patrón anti-fugas en esos archivos.
+- Resultado observado y enlace al reporte: Los tres archivos existían y eran legibles; la búsqueda en ellos no encontró coincidencias. No se generó un reporte.
+- Qué demuestra y qué no demuestra: La comprobación confirma la presencia y legibilidad de los entregables y que no contienen coincidencias con el patrón revisado. No demuestra el funcionamiento de la aplicación, la validez jurídica del tratamiento ni que `robots.txt` proteja el acceso.
+- Limitación o riesgo: El título libre del formulario se conserva en `localStorage` sin vencimiento ni opción de borrado en la interfaz. No se encontraron autenticación, autorización, backend de inspecciones ni auditoría durable; por ello el prototipo debe mantenerse con datos sintéticos.
+- Uso de IA: Utilicé Gemini para analizar la estructura del proyecto y apoyar la elaboración del modelo de amenazas y el inventario de privacidad. Revisé que la documentación correspondiera con los componentes, rutas, módulos y configuraciones existentes. También verifiqué que los archivos fueran legibles y que no presentaran coincidencias con el patrón anti-fugas.
