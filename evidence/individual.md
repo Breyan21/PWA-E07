@@ -284,8 +284,8 @@ El SHA final común se entrega en Classroom tras el último commit. No inserten 
 
 
 - Nombre: Breyan Sebastián Matías Lira
-- Grupo y equipo: 10 A - Equipo E07 (Integrante 2)
-- Enlace / Commit SHA: PENDIENTE_COMMIT_SHA
+- Grupo y equipo: 10 A - Equipo E07
+- Enlace / Commit SHA: 81a627275c020341fe79b5a7088adc965bba2627
 - Mi contribución de esta semana y enlace: Diseñé e implementé la arquitectura de seguridad y controles en código (`src/lib/security/`: `sanitizer.ts`, `validator.ts`, `headers.ts`, `permissions.ts`, `storage-guard.ts` e `index.ts`), configuré las cabeceras HTTP de seguridad y directivas CSP en `next.config.mjs`, e integré validación estricta anti-XSS, cuotas de almacenamiento y derecho de supresión (LGPDPPSO) en `src/components/offline-inspection-workflow.tsx`.
 - Decisión técnica y motivo: Implementé una defensa en profundidad en el cliente: (1) cabeceras HTTP estrictas (`Content-Security-Policy` con `default-src 'self'`, `frame-ancestors 'none'` y `Permissions-Policy` restringiendo cámara y geolocalización al origen); (2) saneamiento y validación estricta de entradas (3 a 120 caracteres para títulos de inspección, eliminación de etiquetas HTML/scripts y detección preventiva de identificadores personales como CURP/RFC/emails para cumplir con el principio de minimización de la LGPDPPSO); y (3) guardas de almacenamiento local con deserializador seguro contra prototype pollution, cota máxima de 100 registros para evitar DoS local y purga manual de datos.
 - Prueba/comando que ejecuté: `npm run typecheck`, `npm run build`, `npm run test:unit`, `npm run test:integration`, `npm run test:legacy` y verificación de ausencia de patrones anti-fugas en `src/lib/security` y `next.config.mjs`.
