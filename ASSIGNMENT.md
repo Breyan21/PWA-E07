@@ -1,4 +1,4 @@
-# Actividad 6: Capacidades del dispositivo y notificaciones
+# Actividad 9: Modelo de amenazas y privacidad aplicada
 
 ## Scenario
 
@@ -6,27 +6,27 @@ La Universidad Tecnológica de Tehuacán necesita una PWA para registrar inspecc
 
 ## Objective
 
-Integrar capacidades del dispositivo con permisos mínimos, fallback funcional, privacidad y manejo de fallos.
+Modelar amenazas y aplicar controles de mínimo privilegio, secretos, transporte, almacenamiento, CSP y validación para un sujeto obligado mexicano.
 
 ## Competencies
 
-**Primaria:** C06. **Acumulativas:** C03, C05, C10.
+**Primaria:** C13. **Acumulativas:** C06, C07.
 
 ## Engineering uplift traceability
 
-**Mínimo oficial:** Unidad II: notificaciones push, características nativas del dispositivo y funcionamiento offline.
+**Mínimo oficial:** Capacidad derivada: implementar esquemas de seguridad para privacidad y confidencialidad cumpliendo leyes y regulaciones aplicables.
 
-**Elevación Engineering Target:** Integrar capacidades del dispositivo con permisos mínimos, fallback funcional, privacidad y manejo de fallos.
+**Elevación Engineering Target:** Modelar amenazas y aplicar controles de mínimo privilegio, secretos, transporte, almacenamiento, CSP y validación para un sujeto obligado mexicano.
 
-**Evidencia de la elevación:** Permite adjuntar evidencia opcional y enviar/mostrar una notificación de cambio, con fallback cuando la API no existe o el permiso es denegado. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
+**Evidencia de la elevación:** Identifica activos, amenazas y controles; valida entradas, evita secretos, restringe permisos y documenta datos tratados y finalidades. La solución se juzga por comportamiento, decisiones justificadas, pruebas y reproducibilidad, no solo por una demo.
 
 ## Prerequisites
 
-Continuar el repositorio personal creado en las semanas anteriores. No descargues un starter nuevo: conserva la captura y sincronización, y agrega solo la capacidad de dispositivo indicada.
+Continuar el repositorio personal creado en las semanas anteriores. No descargues un starter nuevo: analiza y endurece la aplicación acumulada.
 
 ## Schedule and one-week submission window
 
-Semana 6 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
+Semana 9 del calendario de 14 semanas; trabajo individual preferente. Inicio en lunes y entrega a más tardar el domingo de esa misma semana. La duración máxima de la actividad es 7 días y no se aceptan extensiones implícitas de calendario.
 
 ## Difficulty
 
@@ -34,22 +34,22 @@ Nivel 8/10. La dificultad proviene de integrar restricciones, justificar trade-o
 
 ## Requirements
 
-1. Continuar el mismo repositorio de inspecciones e implementar las alertas y evidencia solicitadas.
+1. Continuar el mismo repositorio de inspecciones y aplicar el análisis de seguridad y privacidad solicitado.
 2. Entregar los archivos indicados y datos exclusivamente sintéticos.
 3. Explicar decisiones, límites, riesgos y evidencia de prueba.
 4. Ejecutar los comandos de verificación localmente antes de enviar.
 
-**Funcionalidad mínima:** Permite adjuntar evidencia opcional y enviar/mostrar una notificación de cambio, con fallback cuando la API no existe o el permiso es denegado.
+**Funcionalidad mínima:** Identifica activos, amenazas y controles; valida entradas, evita secretos, restringe permisos y documenta datos tratados y finalidades.
 
-**No funcionales:** No usa secretos reales, solicita permisos bajo acción del usuario, limita datos recolectados y mantiene flujo útil sin la capacidad.
+**No funcionales:** Usa datos sintéticos, HTTPS en despliegue, headers/CSP razonables, dependencias auditables y fallback seguro.
 
 ## Deliverables
 
-- `src/lib/device/camera.ts`
-- `src/lib/device/geolocation.ts`
-- `src/lib/notifications/client.ts`
-- `docs/capabilities.md`
-- `tests/capabilities.spec.ts`
+- `docs/threat-model.md`
+- `docs/privacy-data-inventory.md`
+- `src/lib/security/`
+- `tests/security.spec.ts`
+- `public/robots.txt`
 - `README.md` con ejecución, supuestos y evidencia.
 - Reporte de verificación generado por CI o localmente.
 
@@ -107,7 +107,7 @@ Objetivo de automatización: 90% o más. El workflow instala, compila, ejecuta p
 
 ## Hidden tests
 
-`private-evaluator/w06-device-push/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
+`private-evaluator/w09-security-privacy/check.sh` y su contrato JSON son solo del instructor. Cubren invariantes, regresiones, seguridad, idempotencia, accesibilidad o trazabilidad que no deben poder ajustarse mirando el caso público.
 
 ## Manual review
 
