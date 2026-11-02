@@ -1,10 +1,8 @@
 // scripts/test.mjs
 // Punto de entrada de `npm test`.
-//  - Uso normal (sin argumentos): Vitest (unit + integración) y luego Playwright (E2E),
-//    equivalente a: vitest run tests/unit tests/integration && playwright test
-//  - Modo compatibilidad (`--run`): los workflows formativos de las semanas 2-6 ejecutan
-//    `npm run test -- --run` sin instalar navegadores; en ese caso solo se corren las
-//    pruebas históricas (`npm run test:legacy`).
+//  - Uso normal (sin argumentos): Suite de seguridad, Vitest (unit + integracion) y Playwright (E2E).
+//  - Modo compatibilidad (`--run`): los workflows de evaluacion ejecutan `npm run test -- --run`
+//    delegando en `npm run test:legacy`, que incluye la suite de seguridad de la semana 9.
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
@@ -29,6 +27,7 @@ function run(command, commandArgs) {
 if (legacyMode) {
   run('npm', ['run', 'test:legacy']);
 } else {
+  run('npm', ['run', 'test:security']);
   run('npx', ['vitest', 'run', 'tests/unit', 'tests/integration']);
   run('npx', ['playwright', 'test', ...args]);
 }
