@@ -3,41 +3,21 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { releaseCameraStream, requestCameraAccess } from '../lib/device/camera';
 import { requestCurrentPosition } from '../lib/device/geolocation';
+import {
+  purgeLocalInspections,
+  readSecureInspections,
+  StoredRecord,
+  validateInspectionSecurity,
+  validateInspectionTitle,
+  writeSecureInspections
+} from '../lib/security';
 
-type LocalInspection = {
-  id: string;
-  title: string;
-  status: 'ok' | 'attention';
-  syncStatus: 'pending' | 'synced';
-  createdAt: string;
-};
-
-const STORAGE_KEY = 'checkup:offline-inspections';
-
-function readLocalInspections(): LocalInspection[] {
-  try {
-    const value = window.localStorage.getItem(STORAGE_KEY);
-    const parsed: unknown = value ? JSON.parse(value) : [];
-    return Array.isArray(parsed) ? parsed as LocalInspection[] : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLocalInspections(records: LocalInspection[]): void {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-}
-
-function createInspectionId(): string {
-  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `inspection-${Date.now()}`;
-}
+type LocalInspection = StoredRecord;
 
 /**
  * Flujo sintético y verificable para registrar inspecciones cuando no hay red.
- * La persistencia local permite que la suite E2E pruebe recarga, reconexión e
- * idempotencia sin enviar datos reales a un servicio remoto.
+ * Incorpora controles de seguridad: validación de esquema, límites cuantitativos,
+ * sanitización anti-XSS y cuotas de almacenamiento seguro.
  */
 export default function OfflineInspectionWorkflow() {
   const [records, setRecords] = useState<LocalInspection[]>([]);
@@ -45,12 +25,13 @@ export default function OfflineInspectionWorkflow() {
   const [status, setStatus] = useState<LocalInspection['status']>('ok');
   const [isOnline, setIsOnline] = useState(true);
   const [message, setMessage] = useState('');
+  const [securityError, setSecurityError] = useState('');
   const [locationMessage, setLocationMessage] = useState('Ubicación no solicitada.');
   const [cameraMessage, setCameraMessage] = useState('Cámara no solicitada.');
   const [showCameraFallback, setShowCameraFallback] = useState(false);
 
   useEffect(() => {
-    setRecords(readLocalInspections());
+    setRecords(readSecureInspections());
     const updateConnection = () => setIsOnline(navigator.onLine);
     updateConnection();
     window.addEventListener('online', updateConnection);
@@ -63,22 +44,34 @@ export default function OfflineInspectionWorkflow() {
 
   const saveRecords = (nextRecords: LocalInspection[]) => {
     setRecords(nextRecords);
-    writeLocalInspections(nextRecords);
+    writeSecureInspections(nextRecords);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const normalizedTitle = title.trim();
-    if (!normalizedTitle) return;
+    setSecurityError('');
 
-    const record: LocalInspection = {
-      id: createInspectionId(),
-      title: normalizedTitle,
+    // Validación y sanitización estricta de seguridad
+    const titleCheck = validateInspectionTitle(title);
+    if (!titleCheck.valid) {
+      setSecurityError(titleCheck.error ?? 'Título inválido.');
+      return;
+    }
+
+    const payload = {
+      title: titleCheck.sanitized,
       status,
       syncStatus: navigator.onLine ? 'synced' : 'pending',
       createdAt: new Date().toISOString()
     };
 
+    const validation = validateInspectionSecurity(payload);
+    if (!validation.valid || !validation.sanitized) {
+      setSecurityError(validation.errors.join(' '));
+      return;
+    }
+
+    const record: LocalInspection = validation.sanitized;
     saveRecords([...records, record]);
     setTitle('');
     setMessage(
@@ -127,6 +120,12 @@ export default function OfflineInspectionWorkflow() {
     setCameraMessage('Cámara disponible; el stream se liberó después de la comprobación.');
   };
 
+  const handlePurge = () => {
+    purgeLocalInspections();
+    setRecords([]);
+    setMessage('Registros locales eliminados conforme al derecho de supresión (LGPDPPSO).');
+  };
+
   const pendingCount = records.filter((record) => record.syncStatus === 'pending').length;
   const syncedCount = records.filter((record) => record.syncStatus === 'synced').length;
 
@@ -158,10 +157,20 @@ export default function OfflineInspectionWorkflow() {
             id="inspection-title"
             name="title"
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              setTitle(event.target.value);
+              if (securityError) setSecurityError('');
+            }}
             required
+            maxLength={120}
             placeholder="Ej. Revisión sintética de laboratorio"
           />
+
+          {securityError && (
+            <p role="alert" style={{ color: 'var(--danger, #dc2626)', fontSize: '0.875rem' }} data-testid="security-error">
+              {securityError}
+            </p>
+          )}
 
           <label htmlFor="inspection-status">Estado</label>
           <select id="inspection-status" name="status" value={status} onChange={(event) => setStatus(event.target.value as LocalInspection['status'])}>
@@ -190,7 +199,14 @@ export default function OfflineInspectionWorkflow() {
         <div aria-label="Resumen de sincronización">
           <p data-testid="pending-inspection-count">Pendientes: {pendingCount}</p>
           <p data-testid="synced-inspection-count">Sincronizadas: {syncedCount}</p>
-          <button type="button" onClick={synchronizePending}>Sincronizar pendientes</button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button type="button" onClick={synchronizePending}>Sincronizar pendientes</button>
+            {records.length > 0 && (
+              <button type="button" onClick={handlePurge} style={{ background: 'transparent', border: '1px solid var(--line)' }}>
+                Limpiar datos locales (Supresión LGPDPPSO)
+              </button>
+            )}
+          </div>
         </div>
 
         <ul aria-label="Inspecciones registradas localmente" data-testid="local-inspection-list">
